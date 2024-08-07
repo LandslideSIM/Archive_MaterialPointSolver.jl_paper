@@ -160,19 +160,32 @@ end
     close(fid)
 
     figfont       = MaterialPointSolver.fonttnr
-    figmarkersize = 1
-    figlinewidth  = 1.5
+    figmarkersize = 0.5
+    figlinewidth  = 1.2
     figcolormap   = :gist_rainbow # :darktest
 
-    fig = Figure(size=(900, 410), fonts=(; regular=figfont, bold=figfont), fontsize=14)
-    ax1 = Axis(fig[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax2 = Axis(fig[1, 2], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax3 = Axis(fig[1, 3], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax4 = Axis(fig[1, 4], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax5 = Axis(fig[2, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax6 = Axis(fig[2, 2], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax7 = Axis(fig[2, 3], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
-    ax8 = Axis(fig[2, 4], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    fig = Figure(size=(502, 220), fonts=(; regular=figfont, bold=figfont), fontsize=8, 
+        figure_padding=0)
+
+    a01 = fig[1, 1] = GridLayout()
+    a02 = fig[1, 2] = GridLayout()
+    a03 = fig[1, 3] = GridLayout()
+    a04 = fig[1, 4] = GridLayout()
+    a05 = fig[1, 5] = GridLayout()
+    a06 = fig[2, 1] = GridLayout()
+    a07 = fig[2, 2] = GridLayout()
+    a08 = fig[2, 3] = GridLayout()
+    a09 = fig[2, 4] = GridLayout()
+    a10 = fig[2, 5] = GridLayout()
+
+    ax1 = Axis(a01[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax2 = Axis(a02[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax3 = Axis(a03[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax4 = Axis(a04[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax6 = Axis(a06[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax7 = Axis(a07[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax8 = Axis(a08[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
+    ax9 = Axis(a09[1, 1], aspect=DataAspect(), xticks=(-0.5:0.5:0.5), yticks=(-0.5:0.5:0.5))
 
     Label(fig[1, 1, Top()], "Time: 1.5s", padding=(0, 5, 5, 0), halign=:center)
     Label(fig[1, 2, Top()], "Time: 2.0s", padding=(0, 5, 5, 0), halign=:center)
@@ -187,18 +200,18 @@ end
         colorrange=(-300, 100))
     p4 = scatter!(ax4, t4_pos, color=t4_σm, colormap=figcolormap, markersize=figmarkersize,
         colorrange=(-300, 100))
-    Colorbar(fig[1, 5], p1, width=10, spinewidth=0, ticks=-300:200:100, tickformat="{:.1e}",
+    Colorbar(a05[1, 1], p1, width=10, spinewidth=0, ticks=-300:200:100, tickformat="{:.1e}",
         label="Mean stress (Pa)")
 
-    p5 = scatter!(ax5, t1_pos, color=t1_Vst, colormap=figcolormap, markersize=figmarkersize,
+    p6 = scatter!(ax6, t1_pos, color=t1_Vst, colormap=figcolormap, markersize=figmarkersize,
         colorrange=(0, 0.3))
-    p6 = scatter!(ax6, t2_pos, color=t2_Vst, colormap=figcolormap, markersize=figmarkersize,
+    p7 = scatter!(ax7, t2_pos, color=t2_Vst, colormap=figcolormap, markersize=figmarkersize,
         colorrange=(0, 0.3))
-    p7 = scatter!(ax7, t3_pos, color=t3_Vst, colormap=figcolormap, markersize=figmarkersize,
+    p8 = scatter!(ax8, t3_pos, color=t3_Vst, colormap=figcolormap, markersize=figmarkersize,
         colorrange=(0, 0.3))
-    p8 = scatter!(ax8, t4_pos, color=t4_Vst, colormap=figcolormap, markersize=figmarkersize,
+    p9 = scatter!(ax9, t4_pos, color=t4_Vst, colormap=figcolormap, markersize=figmarkersize,
         colorrange=(0, 0.3))
-    Colorbar(fig[2, 5], p5, width=10, spinewidth=0, ticks=0:0.1:0.3, tickformat="{:.1e}",
+    Colorbar(a10[1, 1], p6, width=10, spinewidth=0, ticks=0:0.1:0.3, tickformat="{:.1e}",
         label="Veloclty magnitude (m/s)")
 
     lines!(ax1, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
@@ -209,24 +222,31 @@ end
     lines!(ax3, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
     lines!(ax4, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
     lines!(ax4, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
-    lines!(ax5, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
-    lines!(ax5, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
     lines!(ax6, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
     lines!(ax6, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
     lines!(ax7, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
     lines!(ax7, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
     lines!(ax8, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
     lines!(ax8, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
+    lines!(ax9, [-0.1 0.1; 0 0], color=:red, linewidth=figlinewidth)
+    lines!(ax9, [0 0; -0.1 0.1], color=:red, linewidth=figlinewidth)
     
     limits!(ax1, -0.50, 0.5, -0.50, 0.5); limits!(ax2, -0.50, 0.5, -0.50, 0.5)
     limits!(ax3, -0.50, 0.5, -0.50, 0.5); limits!(ax4, -0.50, 0.5, -0.50, 0.5)
-    limits!(ax5, -0.50, 0.5, -0.50, 0.5); limits!(ax6, -0.50, 0.5, -0.50, 0.5)
-    limits!(ax7, -0.50, 0.5, -0.50, 0.5); limits!(ax8, -0.50, 0.5, -0.50, 0.5)
+    limits!(ax6, -0.50, 0.5, -0.50, 0.5); limits!(ax7, -0.50, 0.5, -0.50, 0.5)
+    limits!(ax8, -0.50, 0.5, -0.50, 0.5); limits!(ax9, -0.50, 0.5, -0.50, 0.5)
+    
     hidespines!(ax1); hidespines!(ax2); hidespines!(ax3); hidespines!(ax4)
-    hidespines!(ax5); hidespines!(ax6); hidespines!(ax7); hidespines!(ax8)
+    hidespines!(ax6); hidespines!(ax7); hidespines!(ax8); hidespines!(ax9)
+
+    hidexdecorations!(ax1, grid=false); hidexdecorations!(ax2, grid=false)
+    hidexdecorations!(ax3, grid=false); hidexdecorations!(ax4, grid=false)
+    hideydecorations!(ax2, grid=false); hideydecorations!(ax3, grid=false)
+    hideydecorations!(ax4, grid=false); hideydecorations!(ax7, grid=false)
+    hideydecorations!(ax8, grid=false); hideydecorations!(ax9, grid=false)
 
     display(fig)
-    save(joinpath(@__DIR__, "outputs/vec_mean.pdf"), fig)
+    save(joinpath(@__DIR__, "outputs/collision_vis.png"), fig, px_per_unit=5)
 end
 
 let

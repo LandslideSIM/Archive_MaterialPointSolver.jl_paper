@@ -16,10 +16,10 @@ elseif devicetype == :ROCm
     device_name = AMDGPU.HIP.name(AMDGPU.device_id!(GPU_index))
 end
 mkpath(joinpath(@__DIR__, device_name))
-#const rtsdir = "/home/zhuo/Workbench/outputs/"#joinpath(@__DIR__, "outputs") # result path
-#const rtsdir = "/users/zhuo/Workbench/outputs/" # GH 200
-const rtsdir = joinpath(@__DIR__, "outputs") # AMD
-const mtedir = joinpath(@__DIR__, device_name)
+# rtsdir = "/home/zhuo/Workbench/outputs/"#joinpath(@__DIR__, "outputs") # result path
+# rtsdir = "/users/zhuo/Workbench/outputs/" # GH 200
+rtsdir = joinpath(@__DIR__, "outputs") # AMD
+mtedir = joinpath(@__DIR__, device_name)
 MaterialPointSolver.warmup(devicetype, ID=GPU_index)
 single_value = GPUbandwidth(devicetype; datatype=:FP32, ID=GPU_index)
 double_value = GPUbandwidth(devicetype; datatype=:FP64, ID=GPU_index)

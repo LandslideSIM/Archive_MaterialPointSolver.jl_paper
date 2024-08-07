@@ -32,6 +32,7 @@ Generates the final geometry and properties in `.vtu` format (2D).
         vtk["layer"     ] = pts_attr.layer
         vtk["vol"       ] = mp.vol
         vtk["velocity_s"] = mp.Vs'
+        vtk["epII_rate" ] = mp.ϵII
         vtk["disp"      ] = abs.(mp.pos .- mp.init)'
         args.coupling==:TS ? (
             vtk["strain_w"     ] = mp.ϵij_w[:, [1, 2, 4]]';
@@ -70,6 +71,7 @@ Generates the final geometry and properties in `.vtu` format (3D).
         vtk["layer"     ] = pts_attr.layer
         vtk["vol"       ] = mp.vol
         vtk["velocity_s"] = mp.Vs'
+        vtk["epII_rate" ] = mp.ϵII
         vtk["disp"      ] = abs.(mp.pos .- mp.init)'
         args.coupling==:TS ? (
             vtk["strain_w"     ] = mp.ϵij_w'  ;
@@ -120,6 +122,7 @@ Generates animation by using the data from HDF5 file (2D).
             epK    = fid["group$(i)/epK"   ] |> read
             v_s    = fid["group$(i)/v_s"   ] |> read
             mass   = fid["group$(i)/mass"  ] |> read
+            ϵII    = fid["group$(i)/epII_rate"] |> read
             vol    = fid["group$(i)/vol"   ] |> read
             mp_pos = fid["group$(i)/mp_pos"] |> read
             args.coupling==:TS ? (
@@ -140,6 +143,7 @@ Generates animation by using the data from HDF5 file (2D).
                 vtk["vol"       ] = vol
                 vtk["velocity_s"] = v_s'
                 vtk["layer"     ] = layer
+                vtk["epII_rate" ] = ϵII
                 vtk["disp"      ] = abs.(mp_pos .- mp_init)'
                 args.coupling==:TS ? (
                     vtk["strain_w"     ] = eps_w[:, [1, 2, 4]]';
@@ -194,6 +198,7 @@ Generates animation by using the data from HDF5 file (3D).
             epK    = fid["group$(i)/epK"   ] |> read
             v_s    = fid["group$(i)/v_s"   ] |> read
             mass   = fid["group$(i)/mass"  ] |> read
+            ϵII    = fid["group$(i)/epII_rate"] |> read
             vol    = fid["group$(i)/vol"   ] |> read
             mp_pos = fid["group$(i)/mp_pos"] |> read
             args.coupling==:TS ? (
@@ -214,6 +219,7 @@ Generates animation by using the data from HDF5 file (3D).
                 vtk["vol"       ] = vol
                 vtk["velocity_s"] = v_s'
                 vtk["layer"     ] = layer
+                vtk["epII_rate" ] = ϵII
                 vtk["disp"      ] = abs.(mp_pos .- mp_init)'
                 args.coupling==:TS ? (
                     vtk["strain_w"     ] = eps_w'  ;

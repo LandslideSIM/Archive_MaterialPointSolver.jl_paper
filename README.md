@@ -1,5 +1,7 @@
 # MaterialPointSolver.jl Archive
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This repo is used to store the archive files for ***MaterialPointSolver.jl***. It includes the source code for the solver as well as the files needed to reproduce the examples in the paper.
 
 ## How to use
@@ -81,10 +83,7 @@ This repo is used to store the archive files for ***MaterialPointSolver.jl***. I
 4. Using the solver:
    ```
    julia> using MaterialPointSolver
-   ```
-> [!WARNING]
-> When using `MaterialPointSolver.jl` for the first time, error messages may appear due to the absence of certain backends on your machine; these can be ignored. Exiting and re-entering Julia to use the package should result in no errors, and you should see the following:
-   ```
+
    ╔═══════════════════════════════════════════════════════╗
    ║                                                       ║
    ║        ⭐ Welcome to MaterialPointSolver.jl ⭐       ║
@@ -155,5 +154,3 @@ If you use `MaterialPointSolver.jl` in your research, please consider to cite th
      year={year}
    }
    ```
-
-

@@ -771,6 +771,7 @@ Update particle information.
     ix = @index(Global)
     if ix <= mp.num
         dF1 = dF2 = dF3 = dF4 = T2(0.0)
+        eF1 = eF2 = eF3 = eF4 = T2(0.0)
         for iy in Int32(1):Int32(mp.NIC)
             if mp.Ni[ix, iy] != T2(0.0)
                 p2n = mp.p2n[ix, iy]
@@ -781,12 +782,17 @@ Update particle information.
                 dF2 += grid.Δd_s[p2n, 1]*∂Ny
                 dF3 += grid.Δd_s[p2n, 2]*∂Nx
                 dF4 += grid.Δd_s[p2n, 2]*∂Ny
+                eF1 += grid.Vs[p2n, 1]*∂Nx
+                eF2 += (grid.Vs[p2n, 1]*∂Ny + grid.Vs[p2n, 2]*∂Nx) * T2(0.5)
+                eF3 += (grid.Vs[p2n, 1]*∂Ny + grid.Vs[p2n, 2]*∂Nx) * T2(0.5)
+                eF4 += grid.Vs[p2n, 2]*∂Ny
             end
         end
         mp.ΔFs[ix, 1] = dF1
         mp.ΔFs[ix, 2] = dF2
         mp.ΔFs[ix, 3] = dF3
         mp.ΔFs[ix, 4] = dF4
+        mp.ϵII[ix] = sqrt((eF1 ^ 2 + eF4 ^ 2 + T2(2.0) * eF3 ^ 2))
         # compute strain increment 
         mp.Δϵij_s[ix, 1] = dF1
         mp.Δϵij_s[ix, 2] = dF4
@@ -822,6 +828,7 @@ Update particle information.
     ix = @index(Global)
     if ix <= mp.num
         dF1 = dF2 = dF3 = dF4 = dF5 = dF6 = dF7 = dF8 = dF9 = T2(0.0)
+        eF1 = eF2 = eF3 = eF4 = eF5 = eF6 = T2(0.0)
         for iy in Int32(1):Int32(mp.NIC)
             if mp.Ni[ix, iy] != T2(0.0)
                 p2n = mp.p2n[ix, iy]
@@ -832,8 +839,16 @@ Update particle information.
                 dF1 += ds1*∂Nx; dF2 += ds1*∂Ny; dF3 += ds1*∂Nz
                 dF4 += ds2*∂Nx; dF5 += ds2*∂Ny; dF6 += ds2*∂Nz
                 dF7 += ds3*∂Nx; dF8 += ds3*∂Ny; dF9 += ds3*∂Nz
+
+                eF1 += grid.Vs[p2n, 1]*∂Nx
+                eF2 += grid.Vs[p2n, 2]*∂Ny
+                eF3 += grid.Vs[p2n, 3]*∂Nz
+                eF4 += T2(0.5)*(grid.Vs[p2n, 1]*∂Ny + grid.Vs[p2n, 2]*∂Nx)
+                eF5 += T2(0.5)*(grid.Vs[p2n, 1]*∂Nz + grid.Vs[p2n, 3]*∂Nx)
+                eF6 += T2(0.5)*(grid.Vs[p2n, 2]*∂Nz + grid.Vs[p2n, 3]*∂Ny)
             end
         end
+        mp.ϵII[ix] = sqrt((eF1 ^ 2 + eF2 ^ 2 + eF3 ^ 2 + T2(2.0) * (eF4 ^ 2 + eF5 ^ 2 + eF6 ^ 2)))
         mp.ΔFs[ix, 1] = dF1; mp.ΔFs[ix, 2] = dF2; mp.ΔFs[ix, 3] = dF3
         mp.ΔFs[ix, 4] = dF4; mp.ΔFs[ix, 5] = dF5; mp.ΔFs[ix, 6] = dF6
         mp.ΔFs[ix, 7] = dF7; mp.ΔFs[ix, 8] = dF8; mp.ΔFs[ix, 9] = dF9

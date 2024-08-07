@@ -14,11 +14,9 @@ export procedure!
 export dpP!, liE!, hyE!, mcP!
 
 include(joinpath(@__DIR__, "solvers/OS.jl"     ))
-include(joinpath(@__DIR__, "solvers/TS.jl"     ))
 include(joinpath(@__DIR__, "solvers/OS_MUSL.jl"))
 include(joinpath(@__DIR__, "solvers/OS_USL.jl" ))
 include(joinpath(@__DIR__, "solvers/OS_USF.jl" ))
-include(joinpath(@__DIR__, "solvers/TS_MUSL.jl"))
 
 include(joinpath(@__DIR__, "materials/linearelastic.jl"))
 include(joinpath(@__DIR__, "materials/druckerprager.jl"))
@@ -68,6 +66,7 @@ This function will start to run the 2D MPM solver.
                     g["v_s"   ] = mp.Vs
                     g["vol"   ] = mp.vol
                     g["mass"  ] = mp.Ms
+                    g["epII_rate"] = mp.ϵII
                     g["time"  ] = Ti
                     if args.coupling==:TS
                         g["pp"      ] = mp.σw
@@ -169,6 +168,7 @@ This function will start to run the 3D MPM solver.
                     g["epII"  ] = mp.epII
                     g["epK"   ] = mp.epK
                     g["mp_pos"] = mp.pos
+                    g["epII_rate"] = mp.ϵII
                     g["v_s"   ] = mp.Vs
                     g["vol"   ] = mp.vol
                     g["mass"  ] = mp.Ms

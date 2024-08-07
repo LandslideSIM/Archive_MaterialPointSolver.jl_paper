@@ -9,9 +9,6 @@
 |  Reference  : Sulsky, D., Chen, Z., & Schreyer, H. L. (1994). A particle method for      |
 |               history-dependent materials. Computer methods in applied mechanics and     |
 |               engineering, 118(1-2), 179-196.                                            |
-|  Notes      : 1. Don't update the volume and density                                     |
-|               2. Don't use the spin tensor                                               |
-|               3. Turn off MVL                                                            |
 +==========================================================================================#
 
 using MaterialPointSolver

@@ -1,22 +1,35 @@
-# visualization
-let 
-    figfont = MaterialPointSolver.fontcmu
-    fig = Figure(size=(500, 180), fonts=(; regular=figfont, bold=figfont), fontsize=16)
-    axis = Axis(fig[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
-        xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)))
-    p1 = scatter!(axis, mp.pos, color=log10.(mp.epII.+1), colorrange=(0.0, 1.4), 
-        colormap=:turbo, markersize=3)
-    Colorbar(fig[1, 2], p1, label=L"log_{10}(\epsilon_{II}+1)", size=10,
-        ticks=0.1:0.4:1.4, ticklabelsize=16, spinewidth=0)
-    rowsize!(fig.layout, 1, 102)
-    limits!(axis, -0.012, 0.46, -0.012, 0.14)
-    display(fig)
-    save(joinpath(@__DIR__, "outputs/runout.pdf"), fig)
-end
+let
+    figfont = MaterialPointSolver.fonttnr
+    figfontsize = 8
+    fig = Figure(size=(508, 220), fonts=(; regular=figfont, bold=figfont), figure_padding=1,
+        fontsize=figfontsize)
+    
+    a01 = fig[1, 1] = GridLayout()
+    a02 = fig[1, 2] = GridLayout()
+    a03 = fig[2, 1] = GridLayout()
+    a04 = fig[2, 2] = GridLayout()
 
-let 
-    figfont = MaterialPointSolver.fontcmu
-    fig = Figure(size=(500, 180), fonts=(; regular=figfont, bold=figfont), fontsize=16)
+    #=======================================================================================
+    |  figure (a)                                                                          |
+    =======================================================================================#
+    ax1 = Axis(a01[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
+        xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)), 
+        xgridvisible=false, ygridvisible=false)
+
+    poly!(ax1, Point2f[(0, 0), (0, 0.1), (0.2, 0.1), (0.2, 0)], color=:gray)
+    poly!(ax1, Point2f[(0, -1e4), (-1e4, -1e4), (-1e4, -1e4), (0, 1e4)], color=:black)
+    poly!(ax1, Point2f[(0, 0), (0, -1e4), (1e4, -1e4), (1e4, 0)], color=:black)
+    
+    text!(ax1, 0.09, 0.105, text=L"l")
+    text!(ax1, 0.21, 0.04, text=L"h")
+
+    limits!(ax1, -0.012, 0.46, -0.012, 0.14)
+
+    #=======================================================================================
+    |  figure (b)                                                                          |
+    =======================================================================================#
+    figmarkersize1 = 2
+    figmarkersize2 = 8
     assets = joinpath(assetsdir, "data")
     failure = readdlm(joinpath(assets, "2d_collapse_experiments/failure.csv"), ',', Float64)
     surface = readdlm(joinpath(assets, "2d_collapse_experiments/surface.csv"), ',', Float64)
@@ -26,25 +39,23 @@ let
     ux[u1] .= -1; ux[u2] .= 1
     colors = ["#ef0000", "#00008e"]
     cmap = cgrad(colors, 2; categorical=true)
-    axis = Axis(fig[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
+    ax2 = Axis(a02[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
         xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)))
-    p1 = scatter!(axis, mp.pos, color=ux, colormap=cmap, marker=:circle, markersize=3)
-    scatterlines!(axis, failure[:, 1], failure[:, 2], color=:green, marker=:utriangle,
-        markersize=10, strokewidth=0, linewidth=2)
-    scatterlines!(axis, surface[:, 1], surface[:, 2], color=:green, marker=:diamond,
-        markersize=10, strokewidth=0, linewidth=2)
-    limits!(axis, -0.012, 0.46, -0.012, 0.14)
-    Colorbar(fig[1, 2], p1, label="\n ", size=10, ticklabelsize=16, spinewidth=0,
+    p1 = scatter!(ax2, mp.pos, color=ux, colormap=cmap, marker=:circle, 
+        markersize=figmarkersize1)
+    scatterlines!(ax2, failure[:, 1], failure[:, 2], color=:green, marker=:utriangle,
+        markersize=figmarkersize2, strokewidth=0, linewidth=2)
+    scatterlines!(ax2, surface[:, 1], surface[:, 2], color=:green, marker=:diamond,
+        markersize=figmarkersize2, strokewidth=0, linewidth=2)
+    limits!(ax2, -0.012, 0.46, -0.012, 0.14)
+    Colorbar(a02[1, 2], p1, label="\n ", size=6, ticklabelsize=figfontsize, spinewidth=0,
         ticks=(-1:1:1, [L">1mm", L"\Delta u", L"≤1mm"]))
-    rowsize!(fig.layout, 1, 102)
-    display(fig)
-    save(joinpath(@__DIR__, "outputs/comparison.pdf"), fig)
-end
 
-let 
-    figfont = MaterialPointSolver.fontcmu
-    fig = Figure(size=(400, 180), fonts=(; regular=figfont, bold=figfont), fontsize=16)
-
+    #=======================================================================================
+    |  figure (c)                                                                          |
+    =======================================================================================#
+    figmarkersize1 = 2
+    figmarkersize2 = 1
     mp_line = Int64[]
     for i in 1:mp.num
         for j in collect(0:0.02:0.98)
@@ -57,34 +68,45 @@ let
     end
     colors = ["#F9807d", "#00C1C8"]
     cmap = cgrad(colors, 2; categorical=true)
-    axis = Axis(fig[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
+    ax3 = Axis(a03[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
         xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)))
-    scatter!(axis, mp.pos, color=:gray, marker=:circle, markersize=3)
-    scatter!(axis, mp.pos[mp_line, :], color=:red, marker=:circle, markersize=2)
-    limits!(axis, -0.012, 0.46, -0.012, 0.14)
+    scatter!(ax3, mp.pos, color=:gray, marker=:circle, markersize=figmarkersize1)
+    scatter!(ax3, mp.pos[mp_line, :], color=:red, marker=:circle, markersize=figmarkersize2)
+    limits!(ax3, -0.012, 0.46, -0.012, 0.14)
+
+    #=======================================================================================
+    |  figure (d)                                                                          |
+    =======================================================================================#
+    figmarkersize = 2
+    ax4 = Axis(a04[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
+        xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)))
+    p2 = scatter!(ax4, mp.pos, color=log10.(mp.epII.+1), colorrange=(0.0, 1.4), 
+        colormap=:turbo, markersize=figmarkersize)
+    Colorbar(a04[1, 2], p2, label=L"log_{10}(\epsilon_{II}+1)", size=6,
+        ticks=0.1:0.4:1.4, ticklabelsize=figfontsize, spinewidth=0)
+    limits!(ax4, -0.012, 0.46, -0.012, 0.14)
+
+    #=======================================================================================
+    |  layout configuration                                                                |
+    =======================================================================================#
+    hidexdecorations!(ax1, grid=false)
+    hidexdecorations!(ax2, grid=false)
+    hideydecorations!(ax2, grid=false)
+    hideydecorations!(ax4, grid=false)
+    rowgap!(fig.layout, 1, -10)
+    colgap!(a02, 1, 10)
+    colgap!(a04, 1, 10)
+    colsize!(fig.layout, 1, Auto(0.93))
+    rowsize!(a02, 1, Aspect(1, 0.33))
+    rowsize!(a04, 1, Aspect(1, 0.33))
+    Label(fig[1, 1, Bottom()], "(a)", padding=(0, 0, 0, -16), halign=:center)
+    Label(fig[1, 2, Bottom()], "(b)", padding=(0, 0, 0, -16), halign=:center)
+    Label(fig[2, 1, Bottom()], "(c)", padding=(0, 0, 0, 10), halign=:center)
+    Label(fig[2, 2, Bottom()], "(d)", padding=(0, 0, 0, 10), halign=:center)
+
+
     display(fig)
-    save(joinpath(@__DIR__, "outputs/refline.pdf"), fig)
-end
-
-let 
-    figfont = MaterialPointSolver.fontcmu
-    fig = Figure(size=(400, 180), fonts=(; regular=figfont, bold=figfont), fontsize=16)
-
-    axis = Axis(fig[1, 1], xlabel=L"x\ (mm)", ylabel=L"y\ (mm)", aspect=DataAspect(),
-        xticks=(0:0.1:0.5, string.(0:100:500)), yticks=(0:0.05:0.1, string.(0:50:100)), 
-        xgridvisible=false, ygridvisible=false)
-
-    poly!(axis, Point2f[(0, 0), (0, 0.1), (0.2, 0.1), (0.2, 0)], color=:gray)
-    poly!(axis, Point2f[(0, -1e4), (-1e4, -1e4), (-1e4, -1e4), (0, 1e4)], color=:black)
-    poly!(axis, Point2f[(0, 0), (0, -1e4), (1e4, -1e4), (1e4, 0)], color=:black)
-    
-    text!(axis, 0.09, 0.105, text=L"l")
-    text!(axis, 0.21, 0.04, text=L"h")
-
-    limits!(axis, -0.012, 0.46, -0.012, 0.14)
-    resize_to_layout!(fig)
-    display(fig)
-    save(joinpath(@__DIR__, "outputs/model.pdf"), fig)
+    save(joinpath(@__DIR__, "outputs/soilcollapse.png"), fig, px_per_unit=10)
 end
 
 @inbounds let

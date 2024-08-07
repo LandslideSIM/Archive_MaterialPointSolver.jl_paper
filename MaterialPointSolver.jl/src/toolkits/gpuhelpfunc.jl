@@ -76,6 +76,7 @@ function device2host!(args::MODELARGS, mp::PARTICLE, gpu_mp::GPUPARTICLE)
     copyto!(mp.epII , gpu_mp.epII )
     copyto!(mp.ϵij_s, gpu_mp.ϵij_s)
     copyto!(mp.Ms   , gpu_mp.Ms   )
+    copyto!(mp.ϵII  , gpu_mp.ϵII  )
     args.coupling==:TS ? (
         copyto!(mp.Mw      , gpu_mp.Mw      );
         copyto!(mp.Vw      , gpu_mp.Vw      );
@@ -161,6 +162,9 @@ function GPUbandwidth(devicetype::Symbol; datatype::Symbol=:FP64, ID::Int=0)
         AMDGPU.device!(AMDGPU.devices()[ID])
         dev_backend = ROCBackend()
         println("\e[1;36m[ Test:\e[0m device ($(AMDGPU.device().device_id)) → $(datatype)")
+    elseif devicetype==:CPU
+        max_threads = 1024
+        dev_backend = CPU()
     end
     dt = datatype==:FP64 ? Float64 : 
          datatype==:FP32 ? Float32 : error("Wrong datatype!") 
@@ -178,6 +182,10 @@ function GPUbandwidth(devicetype::Symbol; datatype::Symbol=:FP64, ID::Int=0)
             a = rand(dt, nx, ny); A = ROCArray(a)
             b = rand(dt, nx, ny); B = ROCArray(b)
             c = rand(dt, nx, ny); C = ROCArray(c)
+        elseif devicetype==:CPU
+            A = rand(dt, nx, ny)
+            B = rand(dt, nx, ny)
+            C = rand(dt, nx, ny)
         end
         # thread = (2^pow, 1)
         # block = (nx÷thread[1], ny)
