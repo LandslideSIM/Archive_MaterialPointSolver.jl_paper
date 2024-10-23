@@ -118,7 +118,7 @@ This repo is used to store the archive files for ***MaterialPointSolver.jl***. I
    And then run this command:
 
    ```
-   julia> include(joinpath(@__DIR__, "2d_collapse.jl")
+   julia> include(joinpath(@__DIR__, "2d_collapse.jl"))
     [ Info: code warm-up, wait a moment 🔥
     ┌ Info: 2d_collapse [2D/CUDA]
     │ ────────────────┬─────────────┬─────────────────
