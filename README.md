@@ -4,6 +4,9 @@
 
 This repo is used to store the archive files for ***MaterialPointSolver.jl***. It includes the source code for the solver as well as the files needed to reproduce the examples in the paper.
 
+> [!WARNING]
+> ***MaterialPointSolver.jl*** is actively under development, with ongoing improvements not only in performance but also in feature enhancements. Please refer to the [latest version "https://github.com/LandslideSIM/MaterialPointSolver.jl"](https://github.com/LandslideSIM/MaterialPointSolver.jl) for the current status.
+
 ## How to use
 
 1. Install Julia Language on your system, please refer to [here](https://julialang.org/downloads/). By using this command to enter julia:
